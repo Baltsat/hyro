@@ -49,7 +49,7 @@ void setup()
     {
       // Arduino initializations
       Wire.begin();
-      Serial.begin(115200);
+      Serial.begin(9600);
  
       // Set accelerometers low pass filter at 5Hz
       I2CwriteByte(MPU9250_ADDRESS,29,0x06);
@@ -136,8 +136,8 @@ void loop()
      Serial.print ("t");
      Serial.print (gz,DEC); 
      Serial.print ("t");
- 
-     // _____________________
+
+    /* // _____________________
      // ::: Magnetometer :::
  
      // Read register Status 1 and wait for the DRDY: Data Ready
@@ -166,7 +166,7 @@ void loop()
      Serial.print (my-70,DEC);
      Serial.print ("t");
      Serial.print (mz-700,DEC); 
-     Serial.print ("t");
+     Serial.print ("t");*/
  
      // End of line
      Serial.println("");
