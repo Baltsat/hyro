@@ -49,7 +49,7 @@ void setup()
     {
       // Arduino initializations
       Wire.begin();
-      Serial.begin(115200);
+      Serial.begin(9600);
  
       // Set accelerometers low pass filter at 5Hz
       I2CwriteByte(MPU9250_ADDRESS,29,0x06);
@@ -90,8 +90,9 @@ void loop()
       intFlag=false;
  
       // Display time
+      Serial.print ("Time: ");
       Serial.print (millis()-ti,DEC);
-      Serial.print ("t");
+      Serial.print ("   ");
  
       // _______________
       // ::: Counter :::
@@ -122,22 +123,25 @@ void loop()
       // Display values
  
      // Accelerometer
+     Serial.print ("Accelerometer: ");
+     Serial.print ("ax: ");
      Serial.print (ax,DEC); 
-     Serial.print ("t");
+     Serial.print ("  ay: ");
      Serial.print (ay,DEC);
-     Serial.print ("t");
+     Serial.print ("  az: ");
      Serial.print (az,DEC); 
-     Serial.print ("t");
  
      // Gyroscope
+     Serial.print ("   Gyro: ");
+     Serial.print ("gx: ");
      Serial.print (gx,DEC); 
-     Serial.print ("t");
+     Serial.print ("  gy:");
      Serial.print (gy,DEC);
-     Serial.print ("t");
+     Serial.print ("  gz:");
      Serial.print (gz,DEC); 
-     Serial.print ("t");
- 
-     // _____________________
+    
+
+    /* // _____________________
      // ::: Magnetometer :::
  
      // Read register Status 1 and wait for the DRDY: Data Ready
@@ -166,7 +170,7 @@ void loop()
      Serial.print (my-70,DEC);
      Serial.print ("t");
      Serial.print (mz-700,DEC); 
-     Serial.print ("t");
+     Serial.print ("t");*/
  
      // End of line
      Serial.println("");
