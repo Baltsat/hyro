@@ -13,6 +13,25 @@
 #define ACC_FULL_SCALE_4_G 0x08
 #define ACC_FULL_SCALE_8_G 0x10
 #define ACC_FULL_SCALE_16_G 0x18
+
+
+
+
+
+
+
+
+const int CW  = HIGH;
+const int CCW = LOW;
+const int MotorPinA = 4; // direction motor 1 (Channel A)
+const int MotorSpeedPinA = 5; // for motor 1 (channel A)
+
+
+
+const int MotorPinB = 7; // direction motor 2 (Channel B)
+const int MotorSpeedPinB = 6;// for motor 2 (channel B)
+
+
  
 // This function read Nbytes bytes from I2C device at address Address. 
 // Put read bytes starting at register Register in the Data array. 
@@ -47,6 +66,28 @@ volatile bool intFlag=false;
 // Initializations
 void setup()
     {
+
+       // motor A pin assignment
+  pinMode(MotorPinA, OUTPUT);
+  pinMode(MotorSpeedPinA, OUTPUT);
+
+
+  // motor B pin assignment
+  pinMode(MotorPinB, OUTPUT);
+  pinMode(MotorSpeedPinB, OUTPUT);
+
+  Serial.begin(9600);//  seial monitor initialized 
+ // motor A pin assignment
+  pinMode(MotorPinA, OUTPUT);
+  pinMode(MotorSpeedPinA, OUTPUT);
+
+
+  // motor B pin assignment
+  pinMode(MotorPinB, OUTPUT);
+  pinMode(MotorSpeedPinB, OUTPUT);
+
+  Serial.begin(9600);//  seial monitor initialized 
+
       // Arduino initializations
       Wire.begin();
       Serial.begin(9600);
@@ -82,7 +123,56 @@ void callback()
       intFlag=true;
       digitalWrite(13, digitalRead(13) ^ 1);
     }
- 
+
+
+
+void moveMotor(char motor, int dir, int speed)
+{
+  int motorPin;
+  int motorSpeedPin;
+  
+  if(motor =='A')
+  {
+    motorPin      = MotorPinA;
+    motorSpeedPin = MotorSpeedPinA;  
+  }else{
+    motorPin      = MotorPinB;
+    motorSpeedPin = MotorSpeedPinB;     
+  }
+   digitalWrite(motorPin, dir);// set direction for motor
+   analogWrite(motorSpeedPin, speed);// set speed of motor   
+}//moveMotor end
+
+/*
+ * for function is to be used with DFRobot Motor Shield
+ * brake, stops the motor
+ * @param motor is character A or B
+ * example of usage:
+ * brake('A');// stops motor A
+ * brake('B');// stops motor B
+ */
+void brake(char motor)
+{
+  if(motor =='A')
+  {
+    digitalWrite(MotorSpeedPinA, 0);// stop motor A
+    delay(1000);
+  }else{
+    digitalWrite(MotorSpeedPinB, 0);// stop motor B
+    delay(1000);
+   
+  }
+}// brake end
+
+/*
+ * for function is to be used with DFRobot Motor Shield
+ * brake, stops the motor
+ * @param motor is character A or B
+ * example of usage:
+ * brake('A');// stops motor A
+ * brake('B');// stops motor B
+ */
+
 // Main loop, read and display data
 void loop()
     {
@@ -123,24 +213,39 @@ void loop()
       // Display values
  
      // Accelerometer
-     Serial.print ("Accelerometer: ");
-     Serial.print ("ax: ");
+    // Serial.print ("Accelerometer: ");
+  //   Serial.print ("ax: ");
      Serial.print (ax,DEC); 
-     Serial.print ("  ay: ");
+     /*Serial.print ("  ay: ");
      Serial.print (ay,DEC);
      Serial.print ("  az: ");
-     Serial.print (az,DEC); 
+     Serial.print (az,DEC); 8*/
  
-     // Gyroscope
+     /*// Gyroscope
      Serial.print ("   Gyro: ");
      Serial.print ("gx: ");
      Serial.print (gx,DEC); 
      Serial.print ("  gy:");
      Serial.print (gy,DEC);
      Serial.print ("  gz:");
-     Serial.print (gz,DEC); 
-    
+     Serial.print (gz,DEC); */
+     ax = ax-230;
+    int t = 00;
+    int p = constrain((map(abs(ax), 0, 2000, 0,250))^2+150, 0, 250);
+    /*if(ax > -t && ax < t)
+    {
+brake('A');
+brake('B');
+    }
+    else 8?*/if(ax < t){
+       moveMotor('B', CCW, p); 
+       moveMotor('A', CCW, p);
 
+    }
+    else{
+       moveMotor('B', CW, p); 
+       moveMotor('A', CW, p);
+    }
     /* // _____________________
      // ::: Magnetometer :::
  
@@ -173,6 +278,16 @@ void loop()
      Serial.print ("t");*/
  
      // End of line
-     Serial.println("");
+     Serial.print(" ");
+     Serial.println(p);
      // delay(100); 
    }
+
+
+
+
+
+
+
+
+   
